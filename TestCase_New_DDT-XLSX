@@ -1,0 +1,60 @@
+import java.awt.Robot;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import org.openqa.selenium.WebDriver;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+
+// Settings
+// Install robotframework.datadriver from preferences for New Projects - Project Interprector
+
+Library SeleniumLibrary
+Resource  ../Resources/common.robot
+Library  DataDriver  ../TestData/TestData.xlsx  sheet_name=Sheet1
+
+Suite Setup  common.Start TestCase
+Suite Teardown  common.Finish TestCase
+Test Template  To Find all the details after clicking on submit
+
+//Test Cases
+Verify all the details are displaying correctly ${fullname}  ${email}  ${current_address}  ${permanent_address} 
+
+Scenario: Check all the details are displayed correctly
+	[Arguments] ${fullname}  ${email}  ${current_address}  ${permanent_address}  ${pincode}
+	Input Text  ${txtbox_fullname}  ${fullname}
+	Input Text  ${txtbox_email}  ${email}
+	Input Text  ${txtbox_currentaddress}  ${current_address}
+	Input Text  ${txtbox_permanentaddress}  ${permanent_address}
+	Click Submit Button ${btn_Submit}
+	Sleep 2s
+	
+	=================
+	https://demoqa.com/text-box
+	ConfigData.robot
+	
+	//Variables
+	//Configuration Data
+	${url}  https://demoqa.com/text-box
+	%{browser}  chrome
+	
+	// Element Locators
+	
+	${txtbox_fullname}  id:userName
+	${txtbox_email}  id:userEmail
+	${txtbox_currentaddress}  id:currentAddress
+	${txtbox_permanentaddress}  id:permanentAddress
+	
+	${btn_Submit}  xpath://*[@id="submit"]
+	
+	Element Should Contain ${txtbox_fullname}  ${fullname}
+	Element Should Contain ${txtbox_email}  ${email}
+	Element Should Contain ${txtbox_currentaddress}  ${current_address}
+	Element Should Contain ${txtbox_permanentaddress}  ${permanent_address}
